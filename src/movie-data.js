@@ -25,6 +25,32 @@ const moviesData = [
     Genre: 'Romance',
     Director: 'Reza Radfar',
   },
+  {
+    imdbID: 3,
+    Title: 'beautiful scene',
+    Actors: ['james jacklin', 'leo decaprio', 'omid zaki'],
+    Poster: './assets/img/logo192.png',
+    Year: '1995',
+    Plot: 'Florida',
+    Released: '2001',
+    Runtime: '104 mins',
+    imdbRating: 4,
+    Genre: 'Romance',
+    Director: 'Amir janan',
+  },
+  {
+    imdbID: 4,
+    Title: 'one beautiful day',
+    Actors: ['russel crew', 'jack smith', 'barney james'],
+    Poster: './assets/img/logo192.png',
+    Year: '2005',
+    Plot: 'Melbourne',
+    Released: '2007',
+    Runtime: '93 mins',
+    imdbRating: 4,
+    Genre: 'Comedy',
+    Director: 'Jan jan',
+  },
 ];
 
 export default moviesData;
