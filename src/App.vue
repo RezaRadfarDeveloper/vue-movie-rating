@@ -4,10 +4,28 @@
   </NavBar>
   <Main>
     <Box>
-      <MovieList :movies="movies" @set-selected-movie="handleSelectMovie" />
+      <MovieList
+        v-if="!isLoading && !error"
+        :movies="movies"
+        @set-selected-movie="handleSelectMovie"
+      />
+      <ErrorMessage v-if="error" :message="error" />
     </Box>
     <Box>
-      <MovieDetails v-if="selectedId" :selectedId="selectedId" />
+      <MovieDetails
+        @on-close-movie="handleClose"
+        @add-watched-movie="handleAddWatched"
+        v-if="selectedId"
+        :watched="watched"
+        :selectedId="selectedId"
+      />
+      <template v-else>
+        <WatchedSummary :watched="watched" />
+        <WatchedMoviesList
+          :watched="watched"
+          @on-delete-movie="handleDeleteWatched"
+        />
+      </template>
     </Box>
   </Main>
 </template>
@@ -17,9 +35,12 @@ import Box from './components/Box.vue';
 import Main from './components/Main.vue';
 import NavBar from './components/NavBar.vue';
 import Search from './components/Search.vue';
+import ErrorMessage from './components/ErrorMessage.vue';
 import { useMovies } from './composables/useMovies';
 import MovieList from './components/Movies/MovieList.vue';
 import MovieDetails from './components/Movies/MovieDetails.vue';
+import WatchedMoviesList from './components/Movies/WatchedMoviesList.vue';
+import WatchedSummary from './components/Movies/WatchedSummary.vue';
 
 export default {
   components: {
@@ -29,20 +50,35 @@ export default {
     Box,
     MovieList,
     MovieDetails,
+    ErrorMessage,
+    WatchedMoviesList,
+    WatchedSummary,
   },
   setup() {
     const query = ref('');
-    const selectedId = ref('');
-    const { fetchMovies, movies } = useMovies(query);
+    const selectedId = ref(null);
+    const watched = ref([]);
+    const { fetchMovies, movies, isLoading, error } = useMovies(query);
 
     const setSearchTerm = (val) => {
       query.value = val;
     };
 
-    const handleSelectMovie = (movieId) => {
-      console.log(movieId);
+    const handleClose = () => {
+      selectedId.value = null;
+    };
 
-      selectedId.value = movieId;
+    const handleAddWatched = (newMovie) => {
+      watched.value.push(newMovie);
+    };
+
+    const handleDeleteWatched = (movieId) =>
+      (watched.value = watched.value.filter(
+        (movie) => movie.imdbID !== movieId
+      ));
+
+    const handleSelectMovie = (movieId) => {
+      selectedId.value = selectedId.value === movieId ? null : movieId;
     };
 
     watch(query, () => {
@@ -53,8 +89,14 @@ export default {
       query,
       setSearchTerm,
       handleSelectMovie,
+      handleClose,
+      handleAddWatched,
+      handleDeleteWatched,
       selectedId,
+      watched,
       movies,
+      isLoading,
+      error,
     };
   },
 };

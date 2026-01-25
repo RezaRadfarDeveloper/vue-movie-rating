@@ -3,7 +3,9 @@
     <Loader />
 
     <header>
-      <button className="btn-back">&larr;</button>
+      <button className="btn-back" @click="$emit('on-close-movie')">
+        &larr;
+      </button>
       <img :src="movie?.Poster" alt="movie title" />
       <div className="details-overview">
         <h2>{{ movie?.Title }}</h2>
@@ -17,15 +19,15 @@
     </header>
     <section>
       <div className="rating">
-        <template v-if="true">
-          <StarRating />
+        <template v-if="!isWatched">
+          <StarRating @on-rating="handleRating" :userRating="userRating" />
 
-          <button className="btn-add" v-if="userRating > 0">
+          <button className="btn-add" @click="handleAdd" v-if="userRating > 0">
             + Add to list
           </button>
         </template>
 
-        <p v-else>you rated this movie {watchedUserRating} ⭐️</p>
+        <p v-else>you rated this movie {{ watchedUserRating }} ⭐️</p>
       </div>
       <p>
         <em>{{ movie?.Plot }}</em>
@@ -37,33 +39,70 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import moviesData from '../../movie-data';
 import StarRating from '../StarRating.vue';
 import Loader from '../Loader.vue';
 
 export default {
-  props: ['selectedId'],
+  props: ['selectedId', 'watched'],
+  emits: ['on-close-movie', 'add-watched-movie'],
   components: {
     StarRating,
     Loader,
   },
-  setup(selectedId) {
+  setup(props, { emit }) {
     const movie = ref(null);
+    const userRating = ref(0);
 
-    const getMovieDetails = (id) => {
-      console.log(id);
+    const isWatched = computed(() =>
+      props.watched.map((movie) => movie.imdbID).includes(props.selectedId)
+    );
 
-      movie.value = moviesData.filter((movie) => movie.imdbID === id);
+    const watchedUserRating = computed(
+      () =>
+        props.watched.find((movie) => movie.imdbID === props.selectedId)
+          ?.userRating
+    );
+
+    const getMovieDetails = () => {
+      movie.value = moviesData.find(
+        (movie) => movie.imdbID == props.selectedId
+      );
     };
 
-    watch(selectedId, () => {
-      console.log(selectedId);
+    const handleRating = (rating) => {
+      userRating.value = rating;
+      console.log(rating);
+    };
+    const handleAdd = () => {
+      const newMovie = {
+        imdbID: props.selectedId,
+        Title: movie.value.Title,
+        Year: movie.value.Year,
+        Poster: movie.value.Poster,
+        imdbRating: Number(movie.value.imdbRating),
+        Runtime: Number(movie.value.Runtime?.split(' ').at(0)),
+        userRating,
+      };
+      emit('add-watched-movie', newMovie);
+      emit('on-close-movie');
+    };
 
-      getMovieDetails(selectedId);
-    });
+    watch(
+      () => props.selectedId,
+      () => {
+        getMovieDetails();
+      },
+      { immediate: true }
+    );
     return {
       movie,
+      userRating,
+      handleRating,
+      handleAdd,
+      isWatched,
+      watchedUserRating,
     };
   },
 };
