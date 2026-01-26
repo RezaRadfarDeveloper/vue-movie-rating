@@ -30,7 +30,7 @@
   </Main>
 </template>
 <script>
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import Box from './components/Box.vue';
 import Main from './components/Main.vue';
 import NavBar from './components/NavBar.vue';
@@ -41,6 +41,7 @@ import MovieList from './components/Movies/MovieList.vue';
 import MovieDetails from './components/Movies/MovieDetails.vue';
 import WatchedMoviesList from './components/Movies/WatchedMoviesList.vue';
 import WatchedSummary from './components/Movies/WatchedSummary.vue';
+import { useLocalStorageState } from './composables/useLocalStorageState';
 
 export default {
   components: {
@@ -57,8 +58,9 @@ export default {
   setup() {
     const query = ref('');
     const selectedId = ref(null);
-    const watched = ref([]);
-    const { fetchMovies, movies, isLoading, error } = useMovies(query);
+    // const watched = ref([]);
+    const { movies, isLoading, error } = useMovies(query);
+    const watched = useLocalStorageState([], 'watched');
 
     const setSearchTerm = (val) => {
       query.value = val;
@@ -70,20 +72,22 @@ export default {
 
     const handleAddWatched = (newMovie) => {
       watched.value.push(newMovie);
+      // localValue.value = watched.value;
     };
 
     const handleDeleteWatched = (movieId) =>
       (watched.value = watched.value.filter(
         (movie) => movie.imdbID !== movieId
       ));
+    // localValue.value = watched.value;
 
     const handleSelectMovie = (movieId) => {
       selectedId.value = selectedId.value === movieId ? null : movieId;
     };
 
-    watch(query, () => {
-      if (query.value.length > 2) fetchMovies(query);
-    });
+    // watch(query, () => {
+    //   if (query.value.length > 2) fetchMovies(query);
+    // });
 
     return {
       query,
