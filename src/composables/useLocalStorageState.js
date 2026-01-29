@@ -13,7 +13,7 @@ export function useLocalStorageState(val, key) {
       console.log(localValue.value);
       localStorage.setItem(key, JSON.stringify(localValue.value));
     },
-    { deep: true }
+    { deep: true } 
   );
 
   return localValue;

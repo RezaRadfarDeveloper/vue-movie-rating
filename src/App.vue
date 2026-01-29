@@ -4,12 +4,13 @@
   </NavBar>
   <Main>
     <Box>
+      <Loader v-if="isLoading" />
       <MovieList
-        v-if="!isLoading && !error"
+        v-else-if="!isLoading && !error"
         :movies="movies"
         @set-selected-movie="handleSelectMovie"
       />
-      <ErrorMessage v-if="error" :message="error" />
+      <ErrorMessage v-else :message="error" />
     </Box>
     <Box>
       <MovieDetails
@@ -42,6 +43,7 @@ import MovieDetails from './components/Movies/MovieDetails.vue';
 import WatchedMoviesList from './components/Movies/WatchedMoviesList.vue';
 import WatchedSummary from './components/Movies/WatchedSummary.vue';
 import { useLocalStorageState } from './composables/useLocalStorageState';
+import Loader from './components/Loader.vue';
 
 export default {
   components: {
@@ -49,6 +51,7 @@ export default {
     Search,
     Main,
     Box,
+    Loader,
     MovieList,
     MovieDetails,
     ErrorMessage,

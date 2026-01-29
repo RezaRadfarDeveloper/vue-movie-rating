@@ -1,1 +1,3 @@
-<template>Loading ...</template>
+<template>
+  <p className="loader">Loading...</p>
+</template>
