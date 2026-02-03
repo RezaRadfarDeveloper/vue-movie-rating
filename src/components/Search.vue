@@ -11,11 +11,21 @@
 
 <script>
 import { ref } from 'vue';
+import { useKey } from '../composables/useKey';
 
 export default {
   emits: ['set-search-term'],
   setup(props, { emit }) {
     const searchTerm = ref('');
+    const inputEl = ref(null);
+    useKey('Enter', () => {
+      if (inputEl.value === document.activeElement) return;
+      else {
+        inputEl.value.focus();
+        searchTerm.value = '';
+        setSearchTerm();
+      }
+    });
 
     const setSearchTerm = () => {
       emit('set-search-term', searchTerm.value);
@@ -24,6 +34,7 @@ export default {
     return {
       setSearchTerm,
       searchTerm,
+      inputEl,
     };
   },
 };
