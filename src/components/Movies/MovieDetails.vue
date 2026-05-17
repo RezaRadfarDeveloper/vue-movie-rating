@@ -79,7 +79,7 @@ export default {
 
       isLoading.value = true;
       const res = await fetch(
-        `http://www.omdbapi.com/?apikey=${KEY}&i=${props.selectedId}`
+        `https://www.omdbapi.com/?apikey=${KEY}&i=${props.selectedId}`
       );
 
       const data = await res.json();
