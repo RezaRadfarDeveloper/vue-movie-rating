@@ -31,13 +31,17 @@ body {
   color: var(--color-text-dark);
   background-color: var(--color-background-primary);
   padding: 2.4rem;
+  @media screen and (max-width: 680px) {
+    padding: 2rem;
+  }
 }
 
 /* ******* */
 
 .nav-bar {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
   align-items: center;
   height: 7.2rem;
   padding: 0 3.2rem;
@@ -69,8 +73,7 @@ body {
   position: relative;
 
   @media screen and (max-width: 680px) {
-    width: 90%;
-    max-width: 90%;
+    width: 98%;
     height: 365px;
   }
 }
