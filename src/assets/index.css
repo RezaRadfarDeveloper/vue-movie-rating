@@ -240,6 +240,9 @@ body {
   background-color: var(--color-primary-light);
   color: var(--color-text-light);
   box-shadow: 0 1.2rem 2.4rem rgba(0, 0, 0, 0.2);
+  @media screen and (max-width: 680px) {
+    padding: 2.2rem 2.2rem 1.8rem 2.2rem;
+  }
 }
 
 .summary h2 {
