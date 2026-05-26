@@ -51,6 +51,12 @@ body {
   display: flex;
   gap: 2.4rem;
   justify-content: center;
+
+  @media screen and (max-width: 680px) {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+  }
 }
 
 .box {
@@ -61,6 +67,12 @@ body {
   box-shadow: 0 2px 4px rgb(0, 0, 0, 0.25);
   overflow: scroll;
   position: relative;
+
+  @media screen and (max-width: 680px) {
+    width: 90%;
+    max-width: 90%;
+    height: 365px;
+  }
 }
 
 .loader {
@@ -107,6 +119,10 @@ body {
 
   /* background-color: var(--color-background-900); */
   background-color: var(--color-primary-light);
+
+  @media screen and (max-width: 680px) {
+    width: 15rem;
+  }
 }
 
 .search::placeholder {
